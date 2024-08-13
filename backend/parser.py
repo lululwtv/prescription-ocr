@@ -3,7 +3,7 @@ import re
 class PrescriptionParser:
     def __init__(self, text):
         self.text = text
-
+        
     def parse(self):
         return {
             "medicine_name": self.get_field("medicine_name"),

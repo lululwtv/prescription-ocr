@@ -2,8 +2,9 @@ import streamlit as st
 import requests
 import ast
 import pandas as pd
+import time
 
-URL = "http://127.0.0.1:8000/extract_from_doc"
+URL = "http://127.0.0.1:8501/extract_from_doc"
 
 st.title("PillBuddy 💊")
 
@@ -35,10 +36,11 @@ if (file or camera_image) and st.button("Scan Image", type="primary"):
     headers = {}
     
     try:
+        time.sleep(1)
+        bar.progress(50)
         # Perform the file upload and processing
         response = requests.post(URL, headers=headers, files=files)
         # Update progress for uploading
-        bar.progress(50)
         
         # Parse response
         dict_str = response.content.decode("UTF-8")
@@ -115,13 +117,7 @@ if 'recorded_data' in st.session_state and st.session_state.recorded_data:
     placeholder = "N/A"
     for i, record in enumerate(st.session_state.recorded_data):
         st.subheader(f"Record {i+1}")
-        # records_df = pd.DataFrame(record)
-        # records_df.replace("", placeholder, inplace=True)
-        # st.dataframe(records_df.style.hide())
-        for key, value in record.items():
-            if value == "":
-                value = placeholder
-            st.write(f"**{key}:** {value}")
+        st.dataframe(record)
         if st.button("Delete", key=f"delete_{i}"):
             st.session_state.recorded_data.pop(i)
             st.rerun()
