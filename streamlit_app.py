@@ -1,8 +1,9 @@
 import streamlit as st
 import requests
 import ast
-import pandas as pd
 import time
+from PIL import Image
+from streamlit_cropper import st_cropper
 
 URL = "http://127.0.0.1:8501/extract_from_doc"
 
@@ -21,56 +22,59 @@ if option == "Upload Image":
 elif option == "Capture with Camera":
     camera_image = st.camera_input("Capture Image")
 
-# If file or camera image is provided and button is clicked
-if (file or camera_image) and st.button("Scan Image", type="primary"):
-    # Show progress bar
-    progress_bar_placeholder = st.empty()
-    bar = progress_bar_placeholder.progress(0)
-    
-    # Prepare payload for API request
+if file or camera_image:
     if file:
-        files = [('file', file.getvalue())]
+        img = Image.open(file)
     elif camera_image:
-        files = [('file', camera_image.getvalue())]
-    
-    headers = {}
-    
-    try:
-        time.sleep(1)
-        bar.progress(50)
-        # Perform the file upload and processing
-        response = requests.post(URL, headers=headers, files=files)
-        # Update progress for uploading
-        
-        # Parse response
-        dict_str = response.content.decode("UTF-8")
-        data = ast.literal_eval(dict_str)
-        
-        # Update progress after processing
-        bar.progress(100)
-        
-        # Hide progress bar
-        progress_bar_placeholder.empty()
-        
-        # Save data to session state
-        if data:
-            st.session_state.update(data)
-            
-    except Exception as e:
-        st.error(f"An error occurred: {e}")
+        img = Image.open(camera_image)
 
 # If file or camera image is uploaded, display it
-if file:
-    img = file
-elif camera_image:
-    img = camera_image
-
 if img:
+    st.subheader("Crop your image")
+    realtime_update = True
+    box_color = '#0000FF'
+    aspect_ratio = None # free crop
+    cropped_img = st_cropper(img, realtime_update=realtime_update, box_color=box_color,
+                                aspect_ratio=aspect_ratio)
+
     col1, col2 = st.columns(2)
 
     with col1:
-        st.subheader("Your Image")
-        st.image(img)
+        st.subheader("Cropped Image Preview")
+        st.image(cropped_img)
+
+        if st.button("Scan Image", type="primary"):
+            # Show progress bar
+            progress_bar_placeholder = st.empty()
+            bar = progress_bar_placeholder.progress(0)
+            
+            # Prepare payload for API request
+            img_bytes = cropped_img.tobytes()
+            files = [('file', img_bytes)]
+            headers = {}
+            
+            try:
+                time.sleep(1)
+                bar.progress(50)
+                # Perform the file upload and processing
+                response = requests.post(URL, headers=headers, files=files)
+                
+                # Parse response
+                dict_str = response.content.decode("UTF-8")
+                data = ast.literal_eval(dict_str)
+                
+                # Update progress after processing
+                bar.progress(100)
+                
+                # Hide progress bar
+                progress_bar_placeholder.empty()
+                
+                # Save data to session state
+                if data:
+                    st.session_state.update(data)
+                    
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
     
     with col2:
         if st.session_state:
@@ -114,7 +118,6 @@ if img:
 # Display the table of recorded data
 if 'recorded_data' in st.session_state and st.session_state.recorded_data:
     st.header("Recorded Details")
-    placeholder = "N/A"
     for i, record in enumerate(st.session_state.recorded_data):
         st.subheader(f"Record {i+1}")
         st.dataframe(record)

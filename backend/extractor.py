@@ -12,10 +12,12 @@ def extract(file_path):
     processed_image = preprocess_image(image)
 
     # Use EasyOCR to extract text from the image
-    reader = easyocr.Reader(['en'])
-    results = reader.readtext(processed_image, paragraph=True, x_ths=0)
+    reader = easyocr.Reader(['en'], detector='dbnet18')
+    results = reader.readtext(processed_image, paragraph=True)
     
     document_text = "\n".join([result[1] for result in results])
+
+    print(document_text)
     
     # Use the PrescriptionParser to extract fields as needed
     extracted_data = PrescriptionParser(document_text).parse()
@@ -24,14 +26,14 @@ def extract(file_path):
 def preprocess_image(img):
     gray = cv2.cvtColor(np.array(img), cv2.COLOR_BGR2GRAY)
     resized = cv2.resize(gray, None, fx=1.5, fy=1.5, interpolation=cv2.INTER_LINEAR)
-    processed_image = cv2.adaptiveThreshold(
-        resized,
-        255,
-        cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-        cv2.THRESH_BINARY,
-        65, # block size 
-        13  # constant
-    )
+    # processed_image = cv2.adaptiveThreshold(
+    #     resized,
+    #     255,
+    #     cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+    #     cv2.THRESH_BINARY,
+    #     65, # block size 
+    #     13  # constant
+    # )
     return resized
 
 if __name__ == "__main__":
