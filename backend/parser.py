@@ -20,13 +20,13 @@ class PrescriptionParser:
 
     def get_field(self, field_name):
         pattern_dict = {
-            "medicine_name": {"pattern": r"([A-Z]+ [0-9]+MG)", "flags": re.IGNORECASE},
+            "medicine_name": {"pattern": r"([A-Z\-]+ [0-9]+(?:MG|G))", "flags": re.IGNORECASE},
             "quantity": {"pattern": r"(\d+ )\s*(TABLETS|CAPSULES)", "flags": re.IGNORECASE},
             "dosage": {"pattern": r"TAKE (\d+ [A-Z]+)\s", "flags": re.IGNORECASE},
-            "frequency": {"pattern": r"(\d+ TIMES DAILY)", "flags": re.IGNORECASE},
+            "frequency": {"pattern": r"(\d+ TIMES DAILY|1 TIME DAILY)", "flags": re.IGNORECASE},
             "taken_with": {"pattern": r"To take with (.*?)(?:\.|$)", "flags": re.IGNORECASE},
-            "not_taken_with": {"pattern": r"Do not take with (.*?)(?:\.|$)", "flags": re.IGNORECASE},
-            "food": {"pattern": r"May be taken (.*?) food", "flags": re.IGNORECASE},
+            "not_taken_with": {"pattern": r"(?:Do not take|avoid) (?:with|if) (.*?)(?:\.|$)", "flags": re.IGNORECASE},
+            "food": {"pattern": r"May be (.*?food)", "flags": re.IGNORECASE},
             "reason": {"pattern": r"For (.*?)(?:\.|$)", "flags": re.IGNORECASE},
             "side_effects": {"pattern": r"May cause (.*?)(?:\.|$)", "flags": re.IGNORECASE},
             "prescription_date": {"pattern": r"(\d{2}/\d{2}/\d{4})", "flags": re.IGNORECASE},
@@ -37,23 +37,22 @@ class PrescriptionParser:
             matches = re.findall(pattern_object["pattern"], self.text, flags=pattern_object["flags"])
             if matches:
                 return ''.join(matches[0]).strip()
-        return ""
+        return "Nil"
 
 if __name__ == "__main__":
     document_text = """
-    OMEPRAZOLE 20MG 7 CAPSULES
-    TAKE 1 CAPSULE 4 TIMES DAILY
+    CO-AMOXICLAV 1G                                         14 TABLETS
+TAKE 1 TABLET 2 TIMES DAILY
+May be taken with or after food.
+For bacterial infections.
 
-    To take with Diclofenac.
 
-    May be taken with or after food.
 
-    For Gastritis.
+18/07/2024
 
-    May cause drowsiness.
 
-    26/12/2023
     """
 
     pp = PrescriptionParser(document_text)
-    print(pp.parse())
+    for key, value in pp.parse().items():
+        print(f"{key}: {value}")
