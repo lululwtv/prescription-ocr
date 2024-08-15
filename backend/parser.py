@@ -36,7 +36,7 @@ class PrescriptionParser:
         if pattern_object:
             matches = re.findall(pattern_object["pattern"], self.text, flags=pattern_object["flags"])
             if matches:
-                return ''.join(matches[0]).strip()
+                return ''.join(matches[0]).strip().title()
         return "Nil"
 
 if __name__ == "__main__":

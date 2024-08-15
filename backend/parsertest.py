@@ -18,15 +18,15 @@ class TestPrescriptionParser(unittest.TestCase):
         26/12/2023
         """
         expected_output = {
-            "medicine_name": "OMEPRAZOLE 20MG",
-            "quantity": "7 CAPSULES",
-            "dosage": "1 CAPSULE",
-            "frequency": "4 TIMES DAILY",
+            "medicine_name": "Omeprazole 20Mg",
+            "quantity": "7 Capsules",
+            "dosage": "1 Capsule",
+            "frequency": "4 Times Daily",
             "taken_with": "Diclofenac",
             "not_taken_with": "Nil",
-            "food": "taken with or after food",
+            "food": "Taken With Or After Food",
             "reason": "Gastritis",
-            "side_effects": "drowsiness",
+            "side_effects": "Drowsiness",
             "prescription_date": "26/12/2023"
         }
         pp = self.parser(text)
@@ -44,13 +44,13 @@ class TestPrescriptionParser(unittest.TestCase):
         18/07/2024
         """
         expected_output = {
-            "medicine_name": "METFORMIN 850MG",
-            "quantity": "280 TABLETS",
-            "dosage": "1 TABLET",
-            "frequency": "2 TIMES DAILY",
+            "medicine_name": "Metformin 850Mg",
+            "quantity": "280 Tablets",
+            "dosage": "1 Tablet",
+            "frequency": "2 Times Daily",
             "taken_with": "Diclofenac",
-            "not_taken_with": "alcohol",
-            "food": "taken after food",
+            "not_taken_with": "Alcohol",
+            "food": "Taken After Food",
             "reason": "Type 2 Diabetes",
             "side_effects": "Nil",
             "prescription_date": "18/07/2024"
@@ -70,13 +70,13 @@ class TestPrescriptionParser(unittest.TestCase):
         18/07/2024
         """
         expected_output = {
-            "medicine_name": "GLIPIZIDE 5MG",
-            "quantity": "120 TABLETS",
-            "dosage": "1 TABLET",
-            "frequency": "2 TIMES DAILY",
-            "taken_with": "sugary foods if giddy",
-            "not_taken_with": "alcohol",
-            "food": "taken before food",
+            "medicine_name": "Glipizide 5Mg",
+            "quantity": "120 Tablets",
+            "dosage": "1 Tablet",
+            "frequency": "2 Times Daily",
+            "taken_with": "Sugary Foods If Giddy",
+            "not_taken_with": "Alcohol",
+            "food": "Taken Before Food",
             "reason": "Diabetes Mellitus",
             "side_effects": "Nil",
             "prescription_date": "18/07/2024"
@@ -95,13 +95,13 @@ class TestPrescriptionParser(unittest.TestCase):
         18/07/2024
         """
         expected_output = {
-            "medicine_name": "ATORVASTATIN 20MG",
-            "quantity": "90 TABLETS",
-            "dosage": "1 TABLET",
-            "frequency": "1 TIME DAILY",
+            "medicine_name": "Atorvastatin 20Mg",
+            "quantity": "90 Tablets",
+            "dosage": "1 Tablet",
+            "frequency": "1 Time Daily",
             "taken_with": "Nil",
-            "not_taken_with": "pregnant",
-            "food": "taken with or without food",
+            "not_taken_with": "Pregnant",
+            "food": "Taken With Or Without Food",
             "reason": "High Cholesterol",
             "side_effects": "Nil",
             "prescription_date": "18/07/2024"
@@ -115,19 +115,19 @@ class TestPrescriptionParser(unittest.TestCase):
         TAKE 1 TABLET 2 TIMES DAILY
         Avoid if pregnant or breastfeeding.
         May be taken with or without food.
-        For pain relief.
+        For Pain Relief.
 
         18/07/2024
         """
         expected_output = {
-            "medicine_name": "NIFEDIPINE 60MG",
-            "quantity": "230 TABLETS",
-            "dosage": "1 TABLET",
-            "frequency": "2 TIMES DAILY",
+            "medicine_name": "Nifedipine 60Mg",
+            "quantity": "230 Tablets",
+            "dosage": "1 Tablet",
+            "frequency": "2 Times Daily",
             "taken_with": "Nil",
-            "not_taken_with": "pregnant or breastfeeding",
-            "food": "taken with or without food",
-            "reason": "pain relief",
+            "not_taken_with": "Pregnant Or Breastfeeding",
+            "food": "Taken With Or Without Food",
+            "reason": "Pain Relief",
             "side_effects": "Nil",
             "prescription_date": "18/07/2024"
         }
@@ -139,19 +139,19 @@ class TestPrescriptionParser(unittest.TestCase):
         CO-AMOXICLAV 1G                                                 14 TABLETS
         TAKE 1 TABLET 2 TIMES DAILY
         May be taken with or after food.
-        For bacterial infections.
+        For Bacterial Infections.
 
         18/07/2024
         """
         expected_output = {
-            "medicine_name": "CO-AMOXICLAV 1G",
-            "quantity": "14 TABLETS",
-            "dosage": "1 TABLET",
-            "frequency": "2 TIMES DAILY",
+            "medicine_name": "Co-Amoxiclav 1G",
+            "quantity": "14 Tablets",
+            "dosage": "1 Tablet",
+            "frequency": "2 Times Daily",
             "taken_with": "Nil",
             "not_taken_with": "Nil",
-            "food": "taken with or after food",
-            "reason": "bacterial infections",
+            "food": "Taken With Or After Food",
+            "reason": "Bacterial Infections",
             "side_effects": "Nil",
             "prescription_date": "18/07/2024"
         }
