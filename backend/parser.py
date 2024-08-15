@@ -20,15 +20,15 @@ class PrescriptionParser:
 
     def get_field(self, field_name):
         pattern_dict = {
-            "medicine_name": {"pattern": r"([A-Z\-]+ [0-9]+(?:MG|G))", "flags": re.IGNORECASE},
-            "quantity": {"pattern": r"(\d+ )\s*(TABLETS|CAPSULES)", "flags": re.IGNORECASE},
-            "dosage": {"pattern": r"TAKE (\d+ [A-Z]+)\s", "flags": re.IGNORECASE},
-            "frequency": {"pattern": r"(\d+ TIMES DAILY|1 TIME DAILY)", "flags": re.IGNORECASE},
-            "taken_with": {"pattern": r"To take with (.*?)(?:\.|$)", "flags": re.IGNORECASE},
-            "not_taken_with": {"pattern": r"(?:Do not take|avoid) (?:with|if) (.*?)(?:\.|$)", "flags": re.IGNORECASE},
-            "food": {"pattern": r"May be (.*?food)", "flags": re.IGNORECASE},
-            "reason": {"pattern": r"For (.*?)(?:\.|$)", "flags": re.IGNORECASE},
-            "side_effects": {"pattern": r"May cause (.*?)(?:\.|$)", "flags": re.IGNORECASE},
+            "medicine_name": {"pattern": r"([A-Z\s]+[0-9]+(?:MG|G))", "flags": re.IGNORECASE},
+            "quantity": {"pattern": r"(\d+\s+\w+)", "flags": re.IGNORECASE},
+            "dosage": {"pattern": r"TAKE\s+(\d+\s+\w+)", "flags": re.IGNORECASE},
+            "frequency": {"pattern": r"(\d+\s+TIMES\s+DAILY|1\s+TIME\s+DAILY)", "flags": re.IGNORECASE},
+            "taken_with": {"pattern": r"To\s+take\s+with\s+(.*?)(?:\n|$)", "flags": re.IGNORECASE},
+            "not_taken_with": {"pattern": r"(?:Do\s+not\s+take|avoid)\s+(?:with|if)\s+(.*?)(?:\n|$)", "flags": re.IGNORECASE},
+            "food": {"pattern": r"May\s+be\s+taken\s+(.*?)(?:\n|$)", "flags": re.IGNORECASE},
+            "reason": {"pattern": r"For\s+(.*?)(?:\n|$)", "flags": re.IGNORECASE},
+            "side_effects": {"pattern": r"May\s+cause\s+(.*?)(?:\n|$)", "flags": re.IGNORECASE},
             "prescription_date": {"pattern": r"(\d{2}/\d{2}/\d{4})", "flags": re.IGNORECASE},
         }
 
@@ -36,22 +36,26 @@ class PrescriptionParser:
         if pattern_object:
             matches = re.findall(pattern_object["pattern"], self.text, flags=pattern_object["flags"])
             if matches:
-                return ''.join(matches[0]).strip().title()
+                result = ' '.join(matches[0]).strip().title() if isinstance(matches[0], tuple) else matches[0].strip().title()
+
+                # Add a space between the number and "MG" in the medicine name
+                if field_name == "medicine_name":
+                    result = re.sub(r"(\d+)(mg|g)", r"\1 \2", result, flags=re.IGNORECASE)
+
+                return result
         return "Nil"
 
 if __name__ == "__main__":
     document_text = """
-    CO-AMOXICLAV 1G                                         14 TABLETS
+METFORMIN 850MG					      
+280 TABLETS
 TAKE 1 TABLET 2 TIMES DAILY
-May be taken with or after food.
-For bacterial infections.
-
-
-
+To take with Diclofenac
+May be taken after food
+Do not take with alcohol
+For Type 2 Diabetes
 18/07/2024
-
-
-    """
+"""
 
     pp = PrescriptionParser(document_text)
     for key, value in pp.parse().items():
