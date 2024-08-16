@@ -1,10 +1,8 @@
 from fastapi import FastAPI, UploadFile, File
 import uvicorn
-from extractor import extract, initialize_ocr_models
+from extractor import extract
 import uuid
 import os
-
-det_processor, det_model, rec_model, rec_processor = initialize_ocr_models()
 
 app = FastAPI()
 
@@ -19,7 +17,7 @@ def extract_from_doc(file: UploadFile = File(...)):
 
     # Extract data from the uploaded file
     try:
-        data = extract(FILE_PATH, det_processor, det_model, rec_model, rec_processor)
+        data = extract(FILE_PATH)
     except Exception as e:
         data = {
             'error': str(e)
