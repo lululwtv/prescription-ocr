@@ -1,1 +1,1 @@
-streamlit
+streamlitapt-get install
