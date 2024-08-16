@@ -3,7 +3,7 @@ import requests
 import ast
 import pandas as pd
 
-URL = "http://127.0.0.1:8000/extract_from_doc"
+URL = "http://127.0.0.1:8501/extract_from_doc"
 
 st.title("PillBuddy 💊")
 
