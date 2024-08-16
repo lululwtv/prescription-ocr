@@ -1,1 +1,2 @@
-streamlitapt-get install
+# streamlitapt-get install
+surya-ocr==0.4.14

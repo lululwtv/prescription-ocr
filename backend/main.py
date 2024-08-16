@@ -11,7 +11,7 @@ def extract_from_doc(file: UploadFile = File(...)):
     content = file.file.read()
 
     # Save the uploaded file
-    FILE_PATH = "./uploads/" + str(uuid.uuid4()) + ".png"
+    FILE_PATH = "backend/uploads/" + str(uuid.uuid4()) + ".png"
     with open(FILE_PATH, "wb") as f:
         f.write(content)
 
