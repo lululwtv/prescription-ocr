@@ -20,8 +20,8 @@ class PrescriptionParser:
 
     def get_field(self, field_name):
         pattern_dict = {
-            "medicine_name": {"pattern": r"([A-Z\s]+[0-9]+(?:MG|G))", "flags": re.IGNORECASE},
-            "quantity": {"pattern": r"(\d+\s+\w+)", "flags": re.IGNORECASE},
+            "medicine_name": {"pattern": r"([A-Z\-]+(?:\s?[A-Z]+)*\s[0-9]+(?:MG|G))", "flags": re.IGNORECASE},
+            "quantity": {"pattern": r"(\d+ )\s*(TABLETS|CAPSULES)", "flags": re.IGNORECASE},
             "dosage": {"pattern": r"TAKE\s+(\d+\s+\w+)", "flags": re.IGNORECASE},
             "frequency": {"pattern": r"(\d+\s+TIMES\s+DAILY|1\s+TIME\s+DAILY)", "flags": re.IGNORECASE},
             "taken_with": {"pattern": r"To\s+take\s+with\s+(.*?)(?:\n|$)", "flags": re.IGNORECASE},

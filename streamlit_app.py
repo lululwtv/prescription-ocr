@@ -41,7 +41,7 @@ if img:
     col1, col2 = st.columns(2)
 
     with col1:
-        st.subheader("Cropped Image Preview")
+        st.subheader("Image Preview")
         st.image(cropped_img)
 
         if st.button("Scan Image", type="primary"):
